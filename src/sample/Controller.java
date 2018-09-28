@@ -33,6 +33,25 @@ public class Controller {
     private Ellipse ellipse = new Ellipse();
 
     @FXML
+    private MenuItem menuItemRect;
+
+    @FXML
+    private MenuItem menuItemCircle;
+
+    @FXML
+    private MenuItem menuItemEllipse;
+
+
+    @FXML
+    private MenuItem mItemColorRed;
+
+    @FXML
+    private MenuItem mItemColorGreen;
+
+    @FXML
+    private MenuItem mItemColorBlue;
+
+    @FXML
     private ToggleButton drowBtn;
 
     @FXML
@@ -90,7 +109,7 @@ public class Controller {
         pouringCP.setValue(Color.TRANSPARENT);
 
         graphicsContext2D = canvas.getGraphicsContext2D();
-        graphicsContext2D.setLineWidth(1);
+        graphicsContext2D.setLineWidth(sliderLine.getValue());
 
         sliderLine.valueProperty().addListener(e -> {
             double width = sliderLine.getValue();
@@ -98,6 +117,18 @@ public class Controller {
             labelSliderLine.setText(String.format("%.1f", width));
             graphicsContext2D.setLineWidth(width);
         });
+
+        menuItemRect.setOnAction(e -> rectangleBtn.setSelected(true));
+
+        menuItemCircle.setOnAction(event -> circleBtn.setSelected(true));
+
+        menuItemEllipse.setOnAction(event -> ellipseBtn.setSelected(true));
+
+        mItemColorRed.setOnAction(event -> pouringCP.setValue(Color.RED));
+
+        mItemColorBlue.setOnAction(event -> pouringCP.setValue(Color.BLUE));
+
+        mItemColorGreen.setOnAction(event -> pouringCP.setValue(Color.GREEN));
     }
 
     @FXML
@@ -223,13 +254,13 @@ public class Controller {
         saveFile.setTitle("Save file");
 
         File file = saveFile.showSaveDialog(stage);
-        if(file !=null){
+        if (file != null) {
             try {
-                WritableImage writableImage = new WritableImage((int)canvas.getWidth(),(int) canvas.getHeight());
-                canvas.snapshot(null,writableImage);
-                RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage,null);
-                ImageIO.write(renderedImage,"png",file);
-            }catch (IOException e){
+                WritableImage writableImage = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
+                canvas.snapshot(null, writableImage);
+                RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
+                ImageIO.write(renderedImage, "png", file);
+            } catch (IOException e) {
                 System.out.println("Error!");
             }
         }

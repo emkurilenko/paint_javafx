@@ -26,12 +26,25 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Фигура">
             <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
+              <MenuItem fx:id="menuItemRect" mnemonicParsing="false" text="Rectangle" />
+                  <MenuItem fx:id="menuItemCircle" mnemonicParsing="false" text="Circle" />
+                  <MenuItem fx:id="menuItemEllipse" mnemonicParsing="false" text="Ellipse" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Заливка">
             <items>
-              <MenuItem mnemonicParsing="false" text="About" />
+                  <Menu mnemonicParsing="false" text="Стиль">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="Action 1" />
+                    </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Цвет">
+                    <items>
+                      <MenuItem fx:id="mItemColorRed" mnemonicParsing="false" style="-fx-text-fill: red;" text="Красный" />
+                        <MenuItem fx:id="mItemColorGreen" mnemonicParsing="false" style="-fx-text-fill: green;" text="Зеленый" />
+                        <MenuItem fx:id="mItemColorBlue" mnemonicParsing="false" style="-fx-text-fill: blue;" text="Синий" />
+                    </items>
+                  </Menu>
             </items>
           </Menu>
         </menus>
