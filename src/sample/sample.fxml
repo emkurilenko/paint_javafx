@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="Масштаб">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Close" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Фигура">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Delete" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Заливка">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+   <left>
+      <ToolBar orientation="VERTICAL" prefHeight="535.0" prefWidth="144.0" BorderPane.alignment="CENTER">
+         <items>
+            <ToggleButton fx:id="drowBtn" mnemonicParsing="false" text="Draw">
+               <toggleGroup>
+                  <ToggleGroup fx:id="tools" />
+               </toggleGroup></ToggleButton>
+            <ToggleButton fx:id="lineBtn" mnemonicParsing="false" text="Line" toggleGroup="$tools" />
+            <ToggleButton fx:id="rectangleBtn" mnemonicParsing="false" text="Rectange" toggleGroup="$tools" />
+            <ToggleButton fx:id="circleBtn" mnemonicParsing="false" text="Circle" toggleGroup="$tools" />
+            <ToggleButton fx:id="ellipseBtn" mnemonicParsing="false" text="Ellipse" toggleGroup="$tools" />
+            <ToggleButton fx:id="rubberBtn" mnemonicParsing="false" text="Rubber" toggleGroup="$tools" />
+            <ToggleButton mnemonicParsing="false" text="ToggleButton" />
+            <VBox prefHeight="100.0" prefWidth="134.0">
+               <children>
+                  <Label text="Line" />
+                  <ColorPicker fx:id="lineCP" onAction="#lineCPAction" />
+                  <Label fx:id="labelSliderLine" text="3.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Slider fx:id="sliderLine" blockIncrement="1.0" max="50.0" value="3.0" />
+               </children>
+            </VBox>
+            <VBox prefHeight="60.0" prefWidth="134.0">
+               <children>
+                  <Label text="Pouring" />
+                  <ColorPicker fx:id="pouringCP" onAction="#pouringCPAction" />
+               </children>
+            </VBox>
+         </items>
+      </ToolBar>
+   </left>
+   <bottom>
+      <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <items>
+          <Button fx:id="untoBtn" mnemonicParsing="false" text="Undo" />
+            <Button fx:id="redoBtn" mnemonicParsing="false" text="Redo" />
+            <Button fx:id="saveBtn" mnemonicParsing="false" onAction="#saveBtnAction" text="Save" />
+        </items>
+      </ToolBar>
+   </bottom>
+   <center>
+      <Canvas fx:id="canvas" height="530.0" onMouseDragged="#canvasMouseDragged" onMousePressed="#canvasMousePressed" onMouseReleased="#canvasMouseReleased" width="650.0" BorderPane.alignment="CENTER" />
+   </center>
+</BorderPane>
