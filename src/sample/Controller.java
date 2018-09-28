@@ -33,6 +33,13 @@ public class Controller {
     private Ellipse ellipse = new Ellipse();
 
     @FXML
+    private MenuItem mItemCoordinates;
+
+    @FXML
+    private MenuItem mItemScale;
+
+
+    @FXML
     private MenuItem menuItemRect;
 
     @FXML

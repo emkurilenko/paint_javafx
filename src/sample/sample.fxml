@@ -20,9 +20,10 @@
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
           <Menu mnemonicParsing="false" text="Масштаб">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
-            </items>
+               <items>
+                  <MenuItem fx:id="mItemCoordinates" mnemonicParsing="false" text="Coordinates of angles" />
+                  <MenuItem fx:id="mItemScale" mnemonicParsing="false" text="Scale" />
+               </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Фигура">
             <items>
