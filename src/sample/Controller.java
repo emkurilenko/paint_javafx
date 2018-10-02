@@ -17,6 +17,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.Stack;
 
 public class Controller {
@@ -31,6 +32,12 @@ public class Controller {
     private Rectangle rect = new Rectangle();
     private Circle circle = new Circle();
     private Ellipse ellipse = new Ellipse();
+
+    @FXML
+    private MenuItem mItemNewFile;
+
+    @FXML
+    private MenuItem mItemExit;
 
     @FXML
     private MenuItem mItemCoordinates;
@@ -125,6 +132,15 @@ public class Controller {
             graphicsContext2D.setLineWidth(width);
         });
 
+        mItemExit.setOnAction(e ->
+                //ToDo Dialog save File?
+                confirmAlertBeforeLeaving()
+        );
+
+        mItemNewFile.setOnAction(e -> {
+            graphicsContext2D.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        });
+
         menuItemRect.setOnAction(e -> rectangleBtn.setSelected(true));
 
         menuItemCircle.setOnAction(event -> circleBtn.setSelected(true));
@@ -136,6 +152,22 @@ public class Controller {
         mItemColorBlue.setOnAction(event -> pouringCP.setValue(Color.BLUE));
 
         mItemColorGreen.setOnAction(event -> pouringCP.setValue(Color.GREEN));
+
+
+    }
+
+    private void confirmAlertBeforeLeaving() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.CLOSE);
+        alert.setTitle("Сохранить?");
+        alert.setHeaderText("Перед уходом не желаете сохранить ваше произведение исскуства?");
+        Optional<ButtonType> option = alert.showAndWait();
+
+        if (option.get() == ButtonType.YES) {
+            saveBtnAction(new ActionEvent());
+            System.exit(0);
+        } else if (option.get() == ButtonType.CLOSE) {
+            System.exit(0);
+        }
     }
 
     @FXML

@@ -19,6 +19,12 @@
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
+            <Menu mnemonicParsing="false" text="Файл">
+               <items>
+                  <MenuItem fx:id="mItemNewFile" mnemonicParsing="false" text="Начать свою жизнь с чистого листа" />
+                  <MenuItem fx:id="mItemExit" mnemonicParsing="false" text="Выход" />
+               </items>
+            </Menu>
           <Menu mnemonicParsing="false" text="Масштаб">
                <items>
                   <MenuItem fx:id="mItemCoordinates" mnemonicParsing="false" text="Coordinates of angles" />
