@@ -14,9 +14,9 @@ public class Main extends Application {
         Parent root = (Parent) fxmlLoader.load();
         ((Controller) fxmlLoader.getController()).setStage(primaryStage);
 //        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-
+        primaryStage.setResizable(false);
         primaryStage.setTitle("Paint");
-        primaryStage.setScene(new Scene(root, 800, 600));
+        primaryStage.setScene(new Scene(root, 1240, 720));
         primaryStage.show();
     }
 

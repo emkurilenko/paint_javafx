@@ -96,7 +96,13 @@ public class Controller {
     private Label labelSliderLine;
 
     @FXML
+    private Label labelSliderDottedLine;
+
+    @FXML
     private Slider sliderLine;
+
+    @FXML
+    private Slider sliderStrokDash;
 
     @FXML
     private Button untoBtn;
@@ -116,8 +122,8 @@ public class Controller {
 
     @FXML
     private void initialize() {
-        canvas.setHeight(530);
-        canvas.setWidth(650);
+        /*canvas.setHeight(530);
+        canvas.setWidth(650);*/
 
         lineCP.setValue(Color.BLACK);
         pouringCP.setValue(Color.TRANSPARENT);
@@ -127,9 +133,14 @@ public class Controller {
 
         sliderLine.valueProperty().addListener(e -> {
             double width = sliderLine.getValue();
-            System.out.println(width);
             labelSliderLine.setText(String.format("%.1f", width));
             graphicsContext2D.setLineWidth(width);
+        });
+
+        sliderStrokDash.valueProperty().addListener(e->{
+            double w = sliderStrokDash.getValue();
+            labelSliderDottedLine.setText(String.format("%.1f", w));
+            graphicsContext2D.setLineDashes(w);
         });
 
         mItemExit.setOnAction(e ->
@@ -140,6 +151,7 @@ public class Controller {
         mItemNewFile.setOnAction(e -> {
             graphicsContext2D.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         });
+
 
         menuItemRect.setOnAction(e -> rectangleBtn.setSelected(true));
 
@@ -185,15 +197,12 @@ public class Controller {
     void canvasMousePressed(MouseEvent event) {
         graphicsContext2D.setStroke(lineCP.getValue());
         if (drowBtn.isSelected()) {
-            System.out.println("drawBtn selected");
-
             graphicsContext2D.beginPath();
             graphicsContext2D.lineTo(event.getX(), event.getY());
         } else if (rubberBtn.isSelected()) {
             double lineWidth = graphicsContext2D.getLineWidth();
             graphicsContext2D.clearRect(event.getX() - lineWidth / 2, event.getY() - lineWidth / 2, lineWidth, lineWidth);
         } else if (lineBtn.isSelected()) {
-
             line.setStartX(event.getX());
             line.setStartY(event.getY());
         } else if (rectangleBtn.isSelected()) {
@@ -222,10 +231,12 @@ public class Controller {
             graphicsContext2D.closePath();
         } else if (rubberBtn.isSelected()) {
             double lineWidth = graphicsContext2D.getLineWidth();
+
             graphicsContext2D.clearRect(event.getX() - lineWidth / 2, event.getY() - lineWidth / 2, lineWidth, lineWidth);
         } else if (lineBtn.isSelected()) {
             line.setEndX(event.getX());
             line.setEndY(event.getY());
+
             graphicsContext2D.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
 
             //Тут стек возврата!
@@ -300,7 +311,9 @@ public class Controller {
                 RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
                 ImageIO.write(renderedImage, "png", file);
             } catch (IOException e) {
-                System.out.println("Error!");
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText(e.getMessage());
+                alert.showAndWait();
             }
         }
 

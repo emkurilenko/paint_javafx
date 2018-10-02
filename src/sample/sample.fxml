@@ -12,10 +12,11 @@
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1240.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
@@ -27,15 +28,15 @@
             </Menu>
           <Menu mnemonicParsing="false" text="Масштаб">
                <items>
-                  <MenuItem fx:id="mItemCoordinates" mnemonicParsing="false" text="Coordinates of angles" />
-                  <MenuItem fx:id="mItemScale" mnemonicParsing="false" text="Scale" />
+                  <MenuItem fx:id="mItemCoordinates" mnemonicParsing="false" text="Координаты углов" />
+                  <MenuItem fx:id="mItemScale" mnemonicParsing="false" text="Масштаб" />
                </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Фигура">
             <items>
-              <MenuItem fx:id="menuItemRect" mnemonicParsing="false" text="Rectangle" />
-                  <MenuItem fx:id="menuItemCircle" mnemonicParsing="false" text="Circle" />
-                  <MenuItem fx:id="menuItemEllipse" mnemonicParsing="false" text="Ellipse" />
+              <MenuItem fx:id="menuItemRect" mnemonicParsing="false" text="Прямоугольник" />
+                  <MenuItem fx:id="menuItemCircle" mnemonicParsing="false" text="Окргужность" />
+                  <MenuItem fx:id="menuItemEllipse" mnemonicParsing="false" text="Эллипс" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Заливка">
@@ -58,34 +59,61 @@
       </MenuBar>
    </top>
    <left>
-      <ToolBar orientation="VERTICAL" prefHeight="535.0" prefWidth="144.0" BorderPane.alignment="CENTER">
+      <ToolBar orientation="VERTICAL" prefHeight="655.0" prefWidth="140.0" BorderPane.alignment="CENTER">
          <items>
-            <ToggleButton fx:id="drowBtn" mnemonicParsing="false" text="Draw">
+            <ToggleButton fx:id="drowBtn" mnemonicParsing="false" prefHeight="25.0" prefWidth="135.0" text="Карандаш">
                <toggleGroup>
                   <ToggleGroup fx:id="tools" />
                </toggleGroup></ToggleButton>
-            <ToggleButton fx:id="lineBtn" mnemonicParsing="false" text="Line" toggleGroup="$tools" />
-            <ToggleButton fx:id="rectangleBtn" mnemonicParsing="false" text="Rectange" toggleGroup="$tools" />
-            <ToggleButton fx:id="circleBtn" mnemonicParsing="false" text="Circle" toggleGroup="$tools" />
-            <ToggleButton fx:id="ellipseBtn" mnemonicParsing="false" text="Ellipse" toggleGroup="$tools" />
-            <ToggleButton fx:id="rubberBtn" mnemonicParsing="false" text="Rubber" toggleGroup="$tools" />
-            <ToggleButton mnemonicParsing="false" text="ToggleButton" />
+            <ToggleButton fx:id="lineBtn" mnemonicParsing="false" prefWidth="135.0" text="Линия" toggleGroup="$tools" />
+            <ToggleButton fx:id="rectangleBtn" mnemonicParsing="false" prefWidth="135.0" text="Прямоугольник" toggleGroup="$tools" />
+            <ToggleButton fx:id="circleBtn" mnemonicParsing="false" prefWidth="135.0" text="Окружность" toggleGroup="$tools" />
+            <ToggleButton fx:id="ellipseBtn" mnemonicParsing="false" prefWidth="135.0" text="Эллипс" toggleGroup="$tools" />
+            <ToggleButton fx:id="rubberBtn" mnemonicParsing="false" prefWidth="135.0" text="Ластик" toggleGroup="$tools" />
             <VBox prefHeight="100.0" prefWidth="134.0">
                <children>
-                  <Label text="Line" />
-                  <ColorPicker fx:id="lineCP" onAction="#lineCPAction" />
-                  <Label fx:id="labelSliderLine" text="3.0">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
-                  <Slider fx:id="sliderLine" blockIncrement="1.0" max="50.0" value="3.0" />
+                  <Label text="Цвет линии" />
+                  <ColorPicker fx:id="lineCP" onAction="#lineCPAction" prefWidth="135.0" />
+                  <HBox prefHeight="23.0" prefWidth="134.0">
+                     <children>
+                        <Label prefHeight="20.0" prefWidth="110.0" text="Толщина линии: ">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="labelSliderLine" text="3.0" textAlignment="CENTER">
+                           <font>
+                              <Font name="System Bold Italic" size="13.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <Slider fx:id="sliderLine" blockIncrement="1.0" max="50.0" showTickLabels="true" showTickMarks="true" value="3.0" />
                </children>
             </VBox>
             <VBox prefHeight="60.0" prefWidth="134.0">
                <children>
-                  <Label text="Pouring" />
-                  <ColorPicker fx:id="pouringCP" onAction="#pouringCPAction" />
+                  <Label text="Заливка" />
+                  <ColorPicker fx:id="pouringCP" onAction="#pouringCPAction" prefWidth="135.0" />
+               </children>
+            </VBox>
+            <VBox prefHeight="52.0" prefWidth="134.0">
+               <children>
+                  <HBox prefHeight="26.0" prefWidth="134.0">
+                     <children>
+                        <Label text="Прерывистость: ">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="labelSliderDottedLine" text="0.0">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <Slider fx:id="sliderStrokDash" blockIncrement="1.0" max="75.0" showTickLabels="true" showTickMarks="true" />
                </children>
             </VBox>
          </items>
@@ -101,6 +129,6 @@
       </ToolBar>
    </bottom>
    <center>
-      <Canvas fx:id="canvas" height="530.0" onMouseDragged="#canvasMouseDragged" onMousePressed="#canvasMousePressed" onMouseReleased="#canvasMouseReleased" width="650.0" BorderPane.alignment="CENTER" />
+      <Canvas fx:id="canvas" height="655.0" onMouseDragged="#canvasMouseDragged" onMousePressed="#canvasMousePressed" onMouseReleased="#canvasMouseReleased" width="1100.0" />
    </center>
 </BorderPane>
