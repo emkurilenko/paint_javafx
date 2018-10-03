@@ -61,7 +61,7 @@
    <left>
       <ToolBar orientation="VERTICAL" prefHeight="655.0" prefWidth="140.0" BorderPane.alignment="CENTER">
          <items>
-            <ToggleButton fx:id="drowBtn" mnemonicParsing="false" prefHeight="25.0" prefWidth="135.0" text="Карандаш">
+            <ToggleButton fx:id="drowBtn" mnemonicParsing="false" prefHeight="25.0" prefWidth="135.0" selected="true" text="Карандаш">
                <toggleGroup>
                   <ToggleGroup fx:id="tools" />
                </toggleGroup></ToggleButton>
@@ -122,8 +122,8 @@
    <bottom>
       <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <items>
-          <Button fx:id="untoBtn" mnemonicParsing="false" text="Undo" />
-            <Button fx:id="redoBtn" mnemonicParsing="false" text="Redo" />
+          <Button fx:id="untoBtn" mnemonicParsing="false" onAction="#btnUndoActon" text="Undo" />
+            <Button fx:id="redoBtn" mnemonicParsing="false" onAction="#btnRedoActon" text="Redo" />
             <Button fx:id="saveBtn" mnemonicParsing="false" onAction="#saveBtnAction" text="Save" />
         </items>
       </ToolBar>

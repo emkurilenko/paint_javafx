@@ -137,7 +137,7 @@ public class Controller {
             graphicsContext2D.setLineWidth(width);
         });
 
-        sliderStrokDash.valueProperty().addListener(e->{
+        sliderStrokDash.valueProperty().addListener(e -> {
             double w = sliderStrokDash.getValue();
             labelSliderDottedLine.setText(String.format("%.1f", w));
             graphicsContext2D.setLineDashes(w);
@@ -164,7 +164,6 @@ public class Controller {
         mItemColorBlue.setOnAction(event -> pouringCP.setValue(Color.BLUE));
 
         mItemColorGreen.setOnAction(event -> pouringCP.setValue(Color.GREEN));
-
 
     }
 
@@ -196,6 +195,7 @@ public class Controller {
     @FXML
     void canvasMousePressed(MouseEvent event) {
         graphicsContext2D.setStroke(lineCP.getValue());
+        graphicsContext2D.setLineDashes(sliderStrokDash.getValue());
         if (drowBtn.isSelected()) {
             graphicsContext2D.beginPath();
             graphicsContext2D.lineTo(event.getX(), event.getY());
@@ -236,9 +236,8 @@ public class Controller {
         } else if (lineBtn.isSelected()) {
             line.setEndX(event.getX());
             line.setEndY(event.getY());
-
             graphicsContext2D.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
-
+            undoHistory.push(new Line(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY()));
             //Тут стек возврата!
         } else if (rectangleBtn.isSelected()) {
             rect.setWidth(Math.abs(event.getX() - rect.getX()));
@@ -256,6 +255,7 @@ public class Controller {
             graphicsContext2D.strokeRect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
 
             //Тут стек возврата!
+            undoHistory.push(new Rectangle(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight()));
         } else if (circleBtn.isSelected()) {
             circle.setRadius((Math.abs(event.getX() - circle.getCenterX()) + Math.abs(event.getY() - circle.getCenterY())) / 2);
             /*
@@ -272,6 +272,8 @@ public class Controller {
             graphicsContext2D.fillOval(circle.getCenterX(), circle.getCenterY(), circle.getRadius(), circle.getRadius());
             graphicsContext2D.strokeOval(circle.getCenterX(), circle.getCenterY(), circle.getRadius(), circle.getRadius());
             //Тут стек возврата!
+
+            undoHistory.push(new Circle(circle.getCenterX(), circle.getCenterY(), circle.getRadius()));
         } else if (ellipseBtn.isSelected()) {
             ellipse.setRadiusX(Math.abs(event.getX() - ellipse.getCenterX()));
             ellipse.setRadiusY(Math.abs(event.getY() - ellipse.getCenterY()));
@@ -281,10 +283,20 @@ public class Controller {
             if (ellipse.getCenterY() > event.getY()) {
                 ellipse.setCenterY(event.getY());
             }
-            graphicsContext2D.strokeOval(ellipse.getCenterX(), ellipse.getCenterY(), ellipse.getRadiusX(), ellipse.getRadiusY());
             graphicsContext2D.fillOval(ellipse.getCenterX(), ellipse.getCenterY(), ellipse.getRadiusX(), ellipse.getRadiusY());
+            graphicsContext2D.strokeOval(ellipse.getCenterX(), ellipse.getCenterY(), ellipse.getRadiusX(), ellipse.getRadiusY());
+
 
             //Тут стеееек возврата!
+            undoHistory.push(new Ellipse(ellipse.getCenterX(), ellipse.getCenterY(), ellipse.getRadiusX(), ellipse.getRadiusY()));
+        }
+        if(!undoHistory.empty()) {
+            redoHistory.clear();
+            Shape shape = undoHistory.lastElement();
+            shape.setStrokeDashOffset(sliderStrokDash.getValue());
+            shape.setFill(graphicsContext2D.getFill());
+            shape.setStroke(graphicsContext2D.getStroke());
+            shape.setStrokeWidth(graphicsContext2D.getLineWidth());
         }
     }
 
@@ -295,14 +307,13 @@ public class Controller {
 
     @FXML
     void pouringCPAction(ActionEvent event) {
-        graphicsContext2D.setStroke(pouringCP.getValue());
+        graphicsContext2D.setFill(pouringCP.getValue());
     }
 
     @FXML
     void saveBtnAction(ActionEvent event) {
         FileChooser saveFile = new FileChooser();
         saveFile.setTitle("Save file");
-
         File file = saveFile.showSaveDialog(stage);
         if (file != null) {
             try {
@@ -316,7 +327,131 @@ public class Controller {
                 alert.showAndWait();
             }
         }
+    }
 
+    @FXML
+    void btnUndoActon(ActionEvent event) {
+        if (!undoHistory.empty()) {
+            graphicsContext2D.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+            Shape removedShape = undoHistory.lastElement();
+            if (removedShape.getClass() == Line.class) {
+                Line tempLine = (Line) removedShape;
+                tempLine.setFill(graphicsContext2D.getFill());
+                tempLine.setStroke(graphicsContext2D.getStroke());
+                tempLine.setStrokeWidth(graphicsContext2D.getLineWidth());
+                tempLine.setStrokeDashOffset(graphicsContext2D.getLineDashes()[0]);
+                redoHistory.push(tempLine);
+            } else if (removedShape.getClass() == Rectangle.class) {
+                Rectangle tempRect = (Rectangle) removedShape;
+                tempRect.setFill(graphicsContext2D.getFill());
+                tempRect.setStroke(graphicsContext2D.getStroke());
+                tempRect.setStrokeWidth(graphicsContext2D.getLineWidth());
+                tempRect.setStrokeDashOffset(graphicsContext2D.getLineDashes()[0]);
+                redoHistory.push(tempRect);
+            } else if (removedShape.getClass() == Circle.class) {
+                Circle tempCirc = (Circle) removedShape;
+                tempCirc.setStrokeWidth(graphicsContext2D.getLineWidth());
+                tempCirc.setFill(graphicsContext2D.getFill());
+                tempCirc.setStroke(graphicsContext2D.getStroke());
+                tempCirc.setStrokeDashOffset(graphicsContext2D.getLineDashes()[0]);
+                redoHistory.push(tempCirc);
+            } else if (removedShape.getClass() == Ellipse.class) {
+                Ellipse tempElps = (Ellipse) removedShape;
+                tempElps.setFill(graphicsContext2D.getFill());
+                tempElps.setStroke(graphicsContext2D.getStroke());
+                tempElps.setStrokeWidth(graphicsContext2D.getLineWidth());
+                tempElps.setStrokeDashOffset(graphicsContext2D.getLineDashes()[0]);
+                redoHistory.push(tempElps);
+            }
+
+            Shape lastRedo = redoHistory.lastElement();
+            lastRedo.setFill(removedShape.getFill());
+            lastRedo.setStroke(removedShape.getStroke());
+            lastRedo.setStrokeWidth(removedShape.getStrokeWidth());
+            lastRedo.setStrokeDashOffset(removedShape.getStrokeDashOffset());
+            undoHistory.pop();
+
+            for (int i = 0; i < undoHistory.size(); i++) {
+                Shape shape = undoHistory.elementAt(i);
+                if (shape.getClass() == Line.class) {
+                    Line temp = (Line) shape;
+                    graphicsContext2D.setLineWidth(temp.getStrokeWidth());
+                    graphicsContext2D.setStroke(temp.getStroke());
+                    graphicsContext2D.setFill(temp.getFill());
+                    graphicsContext2D.setLineDashes(temp.getStrokeDashOffset());
+                    graphicsContext2D.strokeLine(temp.getStartX(), temp.getStartY(), temp.getEndX(), temp.getEndY());
+                } else if (shape.getClass() == Rectangle.class) {
+                    Rectangle temp = (Rectangle) shape;
+                    graphicsContext2D.setLineWidth(temp.getStrokeWidth());
+                    graphicsContext2D.setStroke(temp.getStroke());
+                    graphicsContext2D.setFill(temp.getFill());
+                    graphicsContext2D.setLineDashes(temp.getStrokeDashOffset());
+                    graphicsContext2D.fillRect(temp.getX(), temp.getY(), temp.getWidth(), temp.getHeight());
+                    graphicsContext2D.strokeRect(temp.getX(), temp.getY(), temp.getWidth(), temp.getHeight());
+                } else if (shape.getClass() == Circle.class) {
+                    Circle temp = (Circle) shape;
+                    graphicsContext2D.setLineWidth(temp.getStrokeWidth());
+                    graphicsContext2D.setStroke(temp.getStroke());
+                    graphicsContext2D.setFill(temp.getFill());
+                    graphicsContext2D.setLineDashes(temp.getStrokeDashOffset());
+                    graphicsContext2D.fillOval(temp.getCenterX(), temp.getCenterY(), temp.getRadius(), temp.getRadius());
+                    graphicsContext2D.strokeOval(temp.getCenterX(), temp.getCenterY(), temp.getRadius(), temp.getRadius());
+                } else if (shape.getClass() == Ellipse.class) {
+                    Ellipse temp = (Ellipse) shape;
+                    graphicsContext2D.setLineWidth(temp.getStrokeWidth());
+                    graphicsContext2D.setStroke(temp.getStroke());
+                    graphicsContext2D.setFill(temp.getFill());
+                    graphicsContext2D.setLineDashes(temp.getStrokeDashOffset());
+                    graphicsContext2D.fillOval(temp.getCenterX(), temp.getCenterY(), temp.getRadiusX(), temp.getRadiusY());
+                    graphicsContext2D.strokeOval(temp.getCenterX(), temp.getCenterY(), temp.getRadiusX(), temp.getRadiusY());
+                }
+            }
+        }
+    }
+
+    @FXML
+    void btnRedoActon(ActionEvent event) {
+        if(!redoHistory.empty()) {
+            Shape shape = redoHistory.lastElement();
+            graphicsContext2D.setLineWidth(shape.getStrokeWidth());
+            graphicsContext2D.setStroke(shape.getStroke());
+            graphicsContext2D.setFill(shape.getFill());
+            graphicsContext2D.setLineDashes(shape.getStrokeDashOffset());
+            System.out.println(shape.getStrokeDashOffset());
+
+            redoHistory.pop();
+            if(shape.getClass() == Line.class) {
+                Line tempLine = (Line) shape;
+                graphicsContext2D.strokeLine(tempLine.getStartX(), tempLine.getStartY(), tempLine.getEndX(), tempLine.getEndY());
+                undoHistory.push(new Line(tempLine.getStartX(), tempLine.getStartY(), tempLine.getEndX(), tempLine.getEndY()));
+            }
+            else if(shape.getClass() == Rectangle.class) {
+                Rectangle tempRect = (Rectangle) shape;
+                graphicsContext2D.fillRect(tempRect.getX(), tempRect.getY(), tempRect.getWidth(), tempRect.getHeight());
+                graphicsContext2D.strokeRect(tempRect.getX(), tempRect.getY(), tempRect.getWidth(), tempRect.getHeight());
+
+                undoHistory.push(new Rectangle(tempRect.getX(), tempRect.getY(), tempRect.getWidth(), tempRect.getHeight()));
+            }
+            else if(shape.getClass() == Circle.class) {
+                Circle tempCirc = (Circle) shape;
+                graphicsContext2D.fillOval(tempCirc.getCenterX(), tempCirc.getCenterY(), tempCirc.getRadius(), tempCirc.getRadius());
+                graphicsContext2D.strokeOval(tempCirc.getCenterX(), tempCirc.getCenterY(), tempCirc.getRadius(), tempCirc.getRadius());
+
+                undoHistory.push(new Circle(tempCirc.getCenterX(), tempCirc.getCenterY(), tempCirc.getRadius()));
+            }
+            else if(shape.getClass() == Ellipse.class) {
+                Ellipse tempElps = (Ellipse) shape;
+                graphicsContext2D.fillOval(tempElps.getCenterX(), tempElps.getCenterY(), tempElps.getRadiusX(), tempElps.getRadiusY());
+                graphicsContext2D.strokeOval(tempElps.getCenterX(), tempElps.getCenterY(), tempElps.getRadiusX(), tempElps.getRadiusY());
+
+                undoHistory.push(new Ellipse(tempElps.getCenterX(), tempElps.getCenterY(), tempElps.getRadiusX(), tempElps.getRadiusY()));
+            }
+            Shape lastUndo = undoHistory.lastElement();
+            lastUndo.setFill(graphicsContext2D.getFill());
+            lastUndo.setStroke(graphicsContext2D.getStroke());
+            lastUndo.setStrokeWidth(graphicsContext2D.getLineWidth());
+            lastUndo.setStrokeDashOffset(graphicsContext2D.getLineDashes()[0]);
+        }
     }
 
 }
